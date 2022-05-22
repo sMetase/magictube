@@ -1,23 +1,28 @@
-# Magictube.py
-# Created by LC
-# 2022.5.21
-
-# 引入库
 import pandas as pd
 import os
 
-path = r"D:\Creep_Recovery" # 定义文件来源
-b = -1 # 用于生成文件名
-for rootdir, subdir, files in os.walk(path):
-    print("\nWe are scanning dic %s" %rootdir)
-    b += 1
-    savepath = os.path.join(r'C:\Users\Chans\Desktop\Chart','%s.xlsx'%b) #用于定义生成文件位置
-    print("The new file will be saved as %s" %savepath)
-    file_list = pd.DataFrame()
-    for file in files:
-        df_txt = pd.read_csv(os.path.join(rootdir,file), skiprows=14, on_bad_lines='skip', sep="\t")
-        print("\tWe are scanning file %s" %file)
-        df_txt.drop(axis=0, index=0, inplace=True)
-        df_txt = df_txt.astype(float)
-        file_list = pd.concat([file_list,df_txt])
-    file_list.to_excel(savepath, index=False)
+try:
+    path = str(input("Please enter your folder location.\n\t"))
+    saveloc = str(input("Please enter the location where you want to save the file.\n\t"))
+    x = int(input("Please enter the ending row of the table header\n\t"))
+    y = bool(input("Is the first line a unit? 1/0"))
+
+except IOError:
+    print("IO Error.")
+
+else:
+    for rootdir, subdir, files in os.walk(path):
+        print('\nWe are scanning folder: %s' %rootdir)
+        print("The files in this folder are as follows:")
+        savepath = os.path.join(saveloc,'%s.xlsx' %rootdir.split("\\")[-1])
+        file_list = pd.DataFrame()
+        for file in files:
+            df_txt = pd.read_csv(os.path.join(rootdir,file), skiprows=x, on_bad_lines='skip', sep="\t") #读取文件
+            print("\t%s" %file) #列出文件
+            if y: #如果首行是单位则去掉首行
+                df_txt.drop(axis=0, index=0, inplace=True)
+            df_txt = df_txt.astype(float)
+            file_list = pd.concat([file_list,df_txt])
+        if file_list.empty == False:
+            file_list.to_excel(savepath, index=False)
+            print("The new file will be saved as %s" %savepath)
