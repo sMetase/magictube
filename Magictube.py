@@ -5,10 +5,10 @@ try:
     path = str(input("Please enter your folder location.\n\t"))
     saveloc = str(input("Please enter the location where you want to save the file.\n\t"))
     x = int(input("Please enter the ending row of the table header\n\t"))
-    y = bool(input("Is the first line a unit? 1/0"))
+    y = bool(input("Is the first line a unit? 1/0\n\t"))
 
 except IOError:
-    print("IO Error.")
+    print("Invalid input.")
 
 else:
     for rootdir, subdir, files in os.walk(path):
@@ -25,4 +25,5 @@ else:
             file_list = pd.concat([file_list,df_txt])
         if file_list.empty == False:
             file_list.to_excel(savepath, index=False)
-            print("The new file will be saved as %s" %savepath)
+            print("These files that mentioned above are merging into one table %s" %savepath)
+    print("\nAll done!")
